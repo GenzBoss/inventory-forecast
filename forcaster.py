@@ -16,14 +16,14 @@ def forcast_inventory(ar,i, ma, days):
     df=df.set_index('Date')
     train = df[ df.index > (df.tail(1).index[0] -  dt.timedelta(90))]
     y = train['Units']
-    print(y)
+    #print(y)
     ARIMAmodel = ARIMA(y, order = (ar, i, ma))
     ARIMAmodel = ARIMAmodel.fit()
 
     future_dates = pd.date_range(start=df.tail(1).index[0] + dt.timedelta(1), end=df.tail(1).index[0] + dt.timedelta(1+days) )
     pred = ARIMAmodel.predict(start = len(df), end = len(df) + days)
     pred.index = future_dates
-    print(pred)
+    #print(pred)
     inventory = pd.DataFrame({'Date':pred.index, 'Inventory forecast':pred.values})
     inventorypivot = pd.pivot_table(inventory, index=['Date'], values=['Inventory forecast'])
     inventorypivot.to_csv('solution.csv')
